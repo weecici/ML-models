@@ -1,8 +1,9 @@
 import numpy as np
+from icecream.icecream import ic
 
 
 class Perceptron:
-    def __init__(self, learning_rate=1e-2, max_iter=1000):
+    def __init__(self, learning_rate=0.1, max_iter=1000):
         self.w = None
         self.b = None
         self.max_iter = max_iter
@@ -14,24 +15,20 @@ class Perceptron:
     def activation_func(self, z):
         return 1 if z >= 0 else 0
 
-    def loss_func(self, prediction, target):
-        return np.sum(prediction - target)
+    def loss_func(self, y_pred, y):
+        return y_pred - y
 
     def predict(self, X):
-        return [self._predict(x) for x in X]
-
-    def _predict(self, x):
-        z = self.linear(x)
-        return 1 if z >= 0 else 0
+        Z = self.linear(X)
+        return np.array([self.activation_func(z) for z in Z])
 
     def fit(self, X, y):
         n_samples, n_features = X.shape
         self.w = np.zeros(n_features)
         self.b = 0
-        for _ in range(self.max_iter):
-            for x, yi in zip(X, y):
-                y_pred = self._predict(x)
-                errors = self.loss_func(y_pred, yi)
 
-                self.w -= self.eta * errors * x
-                self.b -= self.eta * errors * yi
+        for i in range(self.max_iter):
+            errors = self.loss_func(self.predict(X), y)
+
+            self.w -= self.eta * np.dot(X.T, errors)
+            self.b -= self.eta * np.dot(y, errors)
