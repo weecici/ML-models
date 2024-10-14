@@ -21,7 +21,7 @@ class NaiveBayes:
             self.var[cl] = X_cl.var(axis=0)
             self.priors[cl] = X_cl.shape[0] / n_samples
 
-    def gaussian(self, x, cl):
+    def gaussianNB(self, x, cl):
         return np.log(
             np.exp(-((x - self.mean[cl]) ** 2) / (2 * self.var[cl]))
             / np.sqrt(2 * math.pi * self.var[cl])
@@ -31,7 +31,7 @@ class NaiveBayes:
         posteriors = []
         for i, cl in enumerate(self.classes):
             prior = np.log(self.priors[cl])
-            class_conditional = np.sum(self.gaussian(x, i))
+            class_conditional = np.sum(self.gaussianNB(x, i))
             posterior = class_conditional + prior
             posteriors.append(posterior)
         return self.classes[np.argmax(posteriors)]

@@ -5,7 +5,7 @@ from icecream.icecream import ic
 class LinearRegression:
 
     def __init__(self, learning_rate=0.001, n_iters=1000):
-        self.alpha = learning_rate
+        self.eta = learning_rate
         self.n_iters = n_iters
         self.weights = None
         self.bias = None
@@ -22,8 +22,8 @@ class LinearRegression:
 
             dw = (1 / n_samples) * np.dot(X.T, (y_predicted - y))
             db = (1 / n_samples) * np.sum(y_predicted - y)
-            self.weights = self.alpha * dw
-            self.bias -= self.alpha * db
+            self.weights = self.eta * dw
+            self.bias -= self.eta * db
 
     def predict(self, X):
         return np.dot(X, self.weights) + self.bias
