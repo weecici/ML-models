@@ -9,24 +9,57 @@ import matplotlib.pyplot as plt
 
 matplotlib.use("TKagg")
 
+from svm import SVC
 
-from linear_regression import LinearRegression, LinearRegressionL2
+X, y = datasets.make_blobs(
+    n_samples=200, n_features=2, centers=2, cluster_std=1.05, random_state=40
+)
+y = np.where(y == 0, -1, 1)
 
-X, y = datasets.make_regression(300, 1, noise=1, random_state=10)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=1000
+)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=7)
+print(y)
 
-reg = LinearRegression()
-reg.fit(X_train, y_train)
-print(reg.w)
-print(reg.b)
 
-reg = LinearRegressionL2()
-reg.fit(X_train, y_train)
-y_pred = reg.predict(X_test)
-print(reg.w)
-print(reg.b)
+clf = SVC()
+clf.fit(X_train, y_train)
+y_pred = clf.predict(X_test)
 
-plt.scatter(X_test, y_test, color="blue")
-plt.scatter(X_test, y_pred, color="red")
-plt.show()
+acc = np.sum(y_pred == y_test) / len(y_test)
+print(acc)
+
+
+def visualize_svm():
+    def get_hyperplane_value(x, w, b, offset):
+        return (-w[0] * x + b + offset) / w[1]
+
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+    plt.scatter(X[:, 0], X[:, 1], marker="o", c=y)
+
+    x0_1 = np.amin(X[:, 0])
+    x0_2 = np.amax(X[:, 0])
+
+    x1_1 = get_hyperplane_value(x0_1, clf.w, clf.b, 0)
+    x1_2 = get_hyperplane_value(x0_2, clf.w, clf.b, 0)
+
+    x1_1_m = get_hyperplane_value(x0_1, clf.w, clf.b, -1)
+    x1_2_m = get_hyperplane_value(x0_2, clf.w, clf.b, -1)
+
+    x1_1_p = get_hyperplane_value(x0_1, clf.w, clf.b, 1)
+    x1_2_p = get_hyperplane_value(x0_2, clf.w, clf.b, 1)
+
+    ax.plot([x0_1, x0_2], [x1_1, x1_2], "y--")
+    ax.plot([x0_1, x0_2], [x1_1_m, x1_2_m], "k")
+    ax.plot([x0_1, x0_2], [x1_1_p, x1_2_p], "k")
+
+    x1_min = np.amin(X[:, 1])
+    x1_max = np.amax(X[:, 1])
+    ax.set_ylim([x1_min - 3, x1_max + 3])
+
+    plt.show()
+
+
+visualize_svm()
