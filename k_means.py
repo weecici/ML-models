@@ -8,7 +8,10 @@ class K_means:
         self.k = k
 
     def find_labels(self, X):
+        # calculate all distanes from all samples to all centers
         D = cdist(X, self.centers)
+
+        # find the column index that has smallest distance
         return np.argmin(D, axis=1)
 
     def find_centers(self, X):
@@ -23,5 +26,11 @@ class K_means:
 
         self.centers = X[: self.k, :]
 
-        for _ in range(self.max_iters):
+        for i in range(self.max_iters):
+
+            old_centers = set([tuple(center) for center in self.centers])
             self.find_centers(X)
+
+            # check if centers we found have converged
+            if set([tuple(center) for center in self.centers]) == old_centers:
+                break

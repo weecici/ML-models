@@ -17,7 +17,6 @@ X, y_true = datasets.make_blobs(
 km = K_means()
 km.fit(X)
 
-print(km.centers)
 
 plt.scatter(X[:, 0], X[:, 1], color="blue")
 plt.scatter(km.centers[:, 0], km.centers[:, 1], color="red")
