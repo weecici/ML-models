@@ -6,18 +6,21 @@ from sklearn import preprocessing as pp
 
 import matplotlib
 import matplotlib.pyplot as plt
-from k_means import K_means
+from softmax_regression import SoftmaxRegression
 
 matplotlib.use("TKagg")
 
-X, y_true = datasets.make_blobs(
-    n_samples=300, centers=3, cluster_std=0.60, random_state=0
+X, y = datasets.load_iris(return_X_y=True)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=1234
 )
 
-km = K_means()
-km.fit(X)
 
-
-plt.scatter(X[:, 0], X[:, 1], color="blue")
-plt.scatter(km.centers[:, 0], km.centers[:, 1], color="red")
-plt.show()
+reg = SoftmaxRegression()
+reg.fit(X_train, y_train)
+y_pred = reg.predict(X_test)
+print(y_pred)
+print(y_test)
+acc = np.sum(y_pred == y_test) / len(y_test)
+print(acc)

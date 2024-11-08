@@ -3,7 +3,7 @@ from scipy.spatial.distance import cdist
 
 
 class K_means:
-    def __init__(self, max_iters=1000, k=3):
+    def __init__(self, k=3, max_iters=1000):
         self.max_iters = max_iters
         self.k = k
 
@@ -15,6 +15,7 @@ class K_means:
         return np.argmin(D, axis=1)
 
     def find_centers(self, X):
+        # fix lables, find centers
         labels = self.find_labels(X)
         self.centers = np.zeros((self.k, X.shape[1]))
 
