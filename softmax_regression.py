@@ -8,7 +8,7 @@ class SoftmaxRegression:
         self.W = None
 
     def __softmax(self, Z):
-        # calculate softmax with a constant c = max_i x_i to avoid overflow
+        # calculate stable softmax with a constant c = max_i x_i to avoid overflow
         e_Z = np.exp(Z - np.max(Z, axis=0, keepdims=True))
         A = e_Z / e_Z.sum(axis=0)
         return A

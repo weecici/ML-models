@@ -11,7 +11,7 @@ class Perceptron:
     def __weighted_sum(self, X):
         return np.dot(X, self.w) + self.b
 
-    def __activation_func(self, z):
+    def __sign(self, z):
         return 1 if z >= 0 else 0
 
     def __loss_func(self, y_pred, y):
@@ -31,4 +31,4 @@ class Perceptron:
 
     def predict(self, X):
         Z = self.__weighted_sum(X)
-        return np.array([self.__activation_func(z) for z in Z])
+        return np.array([self.__sign(z) for z in Z])

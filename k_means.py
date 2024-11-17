@@ -7,16 +7,16 @@ class K_means:
         self.max_iters = max_iters
         self.k = k
 
-    def find_labels(self, X):
+    def __find_labels(self, X):
         # calculate all distanes from all samples to all centers
         D = cdist(X, self.centers)
 
-        # find the column index that has smallest distance
+        # find the index of column that has smallest distance
         return np.argmin(D, axis=1)
 
-    def find_centers(self, X):
+    def __find_centers(self, X):
         # fix lables, find centers
-        labels = self.find_labels(X)
+        labels = self.__find_labels(X)
         self.centers = np.zeros((self.k, X.shape[1]))
 
         for i in range(self.k):
@@ -30,7 +30,7 @@ class K_means:
         for i in range(self.max_iters):
 
             old_centers = set([tuple(center) for center in self.centers])
-            self.find_centers(X)
+            self.__find_centers(X)
 
             # check if centers we found have converged
             if set([tuple(center) for center in self.centers]) == old_centers:
