@@ -26,7 +26,9 @@ class LinearRegression:
             self.w[0] -= self.eta * gradient_b
 
     def normal_equation(self, X, y):
+        # X_bar = X with a col full of 1's
         X_bar = np.concatenate((np.ones((X.shape[0], 1)), X), axis=1)
+
         self.w = np.dot(np.linalg.pinv(np.dot(X_bar.T, X_bar)), np.dot(X_bar.T, y))
 
     def fit(self, X, y):
