@@ -1,4 +1,5 @@
 # try to implement a NN without tensorflow, pytorch
+# references: https://machinelearningcoban.com/2017/02/24/mlp/
 
 import numpy as np
 import matplotlib
@@ -22,8 +23,8 @@ def softmax(V):
     return Z
 
 
-def cost(Y, Yhat):
-    return -np.sum(Y * np.log(Yhat)) / Y.shape[1]
+def cost(y, y_hat):
+    return -np.sum(y * np.log(y_hat)) / y.shape[1]
 
 
 class NeuralNetwork:
@@ -48,10 +49,10 @@ class NeuralNetwork:
 
         self.B = [np.zeros((self.n_neurons[i], 1)) for i in range(1, self.n_layers + 1)]
 
-        # GD
+        # Gradient Descent
         for i in range(10001):
 
-            # feedforward
+            # feedforward step
             Z = []
             A = [X]
 
@@ -65,11 +66,14 @@ class NeuralNetwork:
 
             y_hat = softmax(y_hat)
 
-            E = (y_hat - y) / N
+            # check cost after 1000 iterations
             if i % 1000 == 0:
                 ic(i)
-                ic(np.argmax(y_hat, axis=0))
                 ic(cost(y, y_hat))
+
+            # backpropagation step
+
+            E = (y_hat - y) / N
             gradient_Wi = np.dot(A[-1], E.T)
 
             self.W[-1] -= self.eta * gradient_Wi
@@ -107,6 +111,7 @@ for j in range(C):
     X[:, ix] = np.c_[r * np.sin(t), r * np.cos(t)].T
     y[ix] = j
 
+# init a NN with following structure: input -> 100 neurons -> 50 neurons -> 10 neurons -> output
 test = NeuralNetwork([100, 50, 10])
 test.fit(X, y)
 y_pred = test.predict(X)
@@ -121,6 +126,5 @@ acc = np.sum(y_pred == y) / len(y)
 # cur_axes.axes.get_xaxis().set_ticks([])
 # cur_axes.axes.get_yaxis().set_ticks([])
 # plt.show()
-ic(y_pred)
-ic(y)
+
 ic(acc)
